@@ -64,4 +64,4 @@ text
 
 - **Author**: Reddouane BERRAMDANE
 - **Email**: reddoma@gmail.com
-- **GitHub URL**: ضع رابط المستودع بعد إنشائه
+- **GitHub URL**: [(https://github.com/reddoma742/geometric-sieve.git)
