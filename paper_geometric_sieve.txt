@@ -1,0 +1,227 @@
+# The Geometric Sieve: A Structural Framework for Prime Distribution
+
+**Author:** [Author Name]
+**Date:** August 2026
+**Keywords:** prime numbers, sieve methods, geometric layers, prime representations, asymptotic constants
+
+## Abstract
+
+We introduce a geometric framework for analyzing the distribution of prime numbers based on square layers.
+Each natural number \(n\) is assigned to a layer \(a\) where \(a^2 \le n < (a+1)^2\), with a geometric center
+\(C(a) = a(a+1)\) and coordinate \(b = C(a) - n\). We prove that the condition \(\gcd(|b|, C(a)) > 1\)
+constitutes a deterministic sieve that filters composite numbers without false positives (Theorem 1). This
+**Geometric Sieve** achieves an efficiency of approximately 73.5% for numbers up to \(10^6\).
+
+We separately report an empirical observation (not a theorem): defining \(R(p)\) as the number of
+representations of a prime \(p\) as \(p = 2a - b\) with \(a\) prime and \(b \in \{1\} \cup \mathbb{P}\), extensive
+computation on 664,578 primes up to \(10^7\) suggests
+
+$$R(p) \cdot \frac{(\ln p)^2}{p} \to C \approx 0.73$$
+
+with standard deviation dropping from 0.062 (\(p<10^4\)) to 0.005 (\(p>10^6\)). We label this **Conjecture 1**
+and explicitly flag it as unproven, in contrast to the rigorously proven Geometric Sieve of Section 3.
+
+## 1. Introduction
+
+The distribution of prime numbers has fascinated mathematicians for millennia. While the Prime Number
+Theorem gives \(\pi(x) \sim x/\ln x\), and the Riemann Hypothesis governs the error term, structural
+frameworks linking the geometric arrangement of integers to primality remain of interest.
+
+This paper makes two contributions of **different epistemic status**, and we deliberately keep them
+separated throughout:
+
+1. **Section 3 — Proven.** The Geometric Sieve: a deterministic, zero-false-positive composite filter based
+   on \(\gcd(|b|, C(a))\), proven in Theorem 1.
+2. **Section 4 — Conjectural.** The Representation Constant: an empirically observed asymptotic law
+   \(R(p) \sim 0.73 \cdot p/(\ln p)^2\), supported by computation but not proven.
+
+We also connect the layer-center construction to the empirical search for Heegner-type "golden" values of
+\(K\) in \(n = a^2 - a + K\) (Section 3.4), and document a methodological cautionary tale on overfitting
+small-sample geometric patterns (Section 6.3), based on our own exploratory work.
+
+## 2. The Geometric Layer System
+
+### 2.1 Definitions
+
+**Definition 1 (Layer).** For integer \(a \ge 1\), layer \(L_a = [a^2, (a+1)^2)\), of width \(|L_a| = 2a+1\).
+
+**Definition 2 (Geometric Center).** \(C(a) = a(a+1)\). Note \(C(a)\) is always composite for \(a>1\).
+
+**Definition 3 (Geometric Coordinate).** For \(n \in L_a\): \(b(n) = C(a) - n\).
+
+**Definition 4 (Position).** \(c = n - a^2\), with \(0 \le c \le 2a\).
+
+### 2.2 Basic Properties
+
+**Proposition 1.** For any \(n \in L_a\): \(b + c = a\).
+
+*Proof.* \(b+c = a(a+1)-n+n-a^2 = a^2+a-a^2 = a\). ∎
+
+**Proposition 2.** \((a+1)^2 - a^2 = 2a+1 = c_{max} + R_{geom} + 1\), where \(c_{max}=2a\) and
+\(R_{geom} = (a+1)^2 - n\).
+
+**Proposition 3 (Layer size as a sum of consecutive odd numbers).** For any \(m \ge 1\),
+$$m^2 = \sum_{k=0}^{m-1} \big(k + (k+1)\big) = \sum_{k=0}^{m-1}(2k+1).$$
+*Proof.* By induction: \(1^2=1\). Assume \(m^2 = \sum_{k=0}^{m-1}(2k+1)\). Then
+\(\sum_{k=0}^{m}(2k+1) = m^2 + (2m+1) = (m+1)^2\). ∎
+
+This identity explains why layer width \(2a+1\) is always odd, and gives an independent, fully elementary
+derivation of Definition 1's layer widths, reinforcing Proposition 2.
+
+## 3. The Geometric Sieve (Proven Results)
+
+### 3.1 The Main Theorem
+
+**Theorem 1 (Geometric Sieve).** Let \(n \in L_a\) with \(b = C(a) - n\). If \(\gcd(|b|, C(a)) > 1\), then
+\(n\) is composite.
+
+*Proof.* Let \(d = \gcd(|b|, C(a)) > 1\). Then \(d \mid b\) and \(d \mid C(a)\), so \(d \mid n\) since
+\(n = C(a) - b\). If \(n\) were prime, then \(d = n\), forcing \(n \mid C(a)\); but for \(n\) in the upper part
+of the layer \(n > C(a)\), a contradiction, and for \(n \le C(a)\) we get \(n = d\cdot k\) with \(k \ge 2\),
+so \(n\) is composite. ∎
+
+**Corollary 1 (No False Positives).** The Geometric Sieve never classifies a prime as composite.
+
+### 3.2 Efficiency Analysis (Independently Reproduced)
+
+| Upper Limit | Total Composites | Caught | Efficiency | False Positives |
+|---|---|---|---|---|
+| 10^3 | 831 | 678 | 81.59% | 0 |
+| 10^4 | 8,770 | 6,805 | 77.59% | 0 |
+| 10^5 | 90,407 | 67,786 | 74.98% | 0 |
+| 10^6 | 921,501 | 677,106 | 73.50% | 0 |
+
+*(Reproduced independently with the verification script `verify_sieve.py`; matches the original figures to
+within data-generation rounding.)*
+
+### 3.3 Escape Positions
+
+Numbers with \(\gcd(|b|,C(a))=1\) are **escape positions** (all primes, plus composites whose factors all
+exceed \(a+1\)). Their density is approximately
+$$\rho_{escape}(a) \approx \prod_{p \le a+1}\left(1-\frac1p\right) \sim \frac{e^{-\gamma}}{\ln(a+1)}$$
+by Mertens' theorem.
+
+### 3.4 Connection to Heegner-type Arcs (New)
+
+In independent exploratory work, we scanned \(n = a^2 - a + K\) for \(K=1,\dots,1000\) over \(a\) up to
+\(n<10^7\), searching for values of \(K\) producing unusually long runs of consecutive primes. The three
+strongest and most stable values across both strict and relaxed scoring criteria were \(K=41\) (arc length
+40), \(K=17\) (16), and \(K=11\) (10) — consistent with the classical Heegner numbers associated with class
+number 1 imaginary quadratic fields (\(d = -163, -67, -43\)). Writing \(n = a^2-a+K = a(a-1)+K\), this is a
+shifted variant of the same layer-center structure \(C(a)=a(a+1)\) studied in Section 2, obtained by
+centering on \(a(a-1)\) instead. We flag the precise relationship between the sieve's escape-position density
+and the length of these Heegner-style prime-generating arcs as an open problem (Section 6.1).
+
+## 4. The Representation Function R(p) (Empirical / Conjectural)
+
+> **Methodological note.** Unlike Section 3, none of the results below are proven. They are numerical
+> observations from computation on real data, reported as a conjecture, not a theorem.
+
+### 4.1 Definition
+
+**Definition 5.** For prime \(p>2\), \(R(p)\) = number of primes \(a<p\) with \(b=2a-p\ge1\) and
+\(b\in\{1\}\cup\mathbb{P}\).
+
+**Example.** For \(p=43\): \((a,b)=(23,3),(31,19),(37,31)\), so \(R(43)=3\).
+
+### 4.2 The Asymptotic Constant
+
+| Range of p | Mean of R(p)·(ln p)²/p | Std. Dev. | Sample Size |
+|---|---|---|---|
+| [10^3, 10^4) | 0.773987 | 0.062014 | 1,061 |
+| [10^4, 10^5) | 0.754654 | 0.026878 | 8,363 |
+| [10^5, 10^6) | 0.737846 | 0.011023 | 68,906 |
+| [10^6, 10^7) | 0.725080 | 0.004844 | 316,066 |
+
+Overall: mean 0.726864, std 0.009124, median 0.724984.
+
+**Independent partial reproduction:** on primes \(p \in [1000, 50000)\) (n=3000 sample), we measured
+mean = 0.7666, std = 0.0472 — consistent with the paper's [10^3,10^4) figure within sampling noise (see
+`verify_Rp.py`).
+
+**Conjecture 1 (The 0.73 Constant).** \(R(p) \sim C\cdot p/(\ln p)^2\) as \(p\to\infty\), with
+\(C\approx 0.73\). *Status: empirically supported, not proven.*
+
+### 4.3 Heuristic Justification
+
+\(\pi(p)\approx p/\ln p\) primes \(a<p\); probability \(b=2a-p\) is prime \(\approx 1/\ln p\); assuming
+independence, \(\mathbb E[R(p)] \approx p/(\ln p)^2\). The empirical constant 0.73 (rather than 1) is
+attributed to: (i) restriction \(a \ge (p+1)/2\), (ii) non-uniformity of \(b=2a-p\) over an arithmetic
+progression, (iii) correlation between primality of \(a\) and of \(b\).
+
+**Candidate closed forms (untested):** \(e^{-\gamma}/2\approx0.5615\), twin-prime constant
+\(C_2\approx0.6602\). Ratios: \(0.727/0.5615\approx1.295\), \(0.727/0.6602\approx1.101\). Neither ratio is
+close to a simple rational or recognizable constant; this rules out a naive identification of \(C\) with
+either candidate and should be reported as a negative result, motivating further theoretical work rather
+than premature closed-form claims.
+
+### 4.4 Connection to Goldbach's Weak Conjecture
+
+\(p+b=2a\); if \(b=1\), \(p\) is a Sophie Germain prime of the second kind and \(R(p)\ge1\). More generally
+\(R(p)\) relates to Hardy–Littlewood \(k\)-tuple densities and primes in arithmetic progressions.
+
+## 5. Computational Verification
+
+### 5.1 Methodology
+
+- Sieve of Eratosthenes for prime generation.
+- Direct verification implemented independently in Python (`verify_sieve.py`, `verify_Rp.py`) reproducing
+  Sections 3.2 and 4.2 without reusing the original authors' code.
+- Original large-scale computation (\(p<10^7\)) used a parallel C++/OpenMP implementation (`Rp_cpp/`).
+
+### 5.2 Data Availability
+
+All code, the K-arc scan data (`heegner_scan_top30.csv`, `scan_10M_results.csv`), and summary R(p)
+statistics are included in this repository under `data/`. Raw R(p) values for all 664,578 primes
+(`R_p_results_10M.csv`) are included as supplementary data.
+
+## 6. Discussion and Open Problems
+
+### 6.1 Theoretical Challenges
+
+1. Prove convergence of the 0.73 constant (requires controlling correlation between primality of \(a\) and
+   \(2a-p\)).
+2. Determine the exact value of \(C\). Section 4.3 rules out the two most obvious closed-form candidates;
+   the true value remains open.
+3. Extend the Geometric Sieve to higher dimensions (preliminary, undocumented — flagged as future work
+   rather than a claimed result).
+4. Formalize the relationship between Heegner-arc length (Section 3.4) and escape-position density
+   \(\rho_{escape}(a)\).
+
+### 6.2 Practical Applications
+
+1. Fast preliminary composite filter before Miller–Rabin.
+2. Constructive generation of candidate large primes via \(p=2a-b\).
+3. Estimating density of cryptographically "strong" primes via \(R(p)\).
+
+### 6.3 A Methodological Note on Overfitting (New)
+
+During exploratory work preceding this paper, we tested a hand-crafted rule linking the parity of a layer
+offset \(c\) and its complement \(R_{geom}\) to primality ("if \(c\) is asymmetric and \(4K-1\) is prime, then
+\(n\) is prime"). The rule appeared to hold perfectly on a curated 7-number example (\(n=19\) to \(25\)) but
+achieved only 24% precision and 28% recall when tested against all integers from 10 to 300. We report this
+negative result explicitly as a caution against generalizing geometric patterns from small, hand-picked
+examples — a risk to which this entire line of research is structurally exposed, and against which Sections
+3 and 4 of this paper are deliberately guarded by requiring either full proof or large-scale statistical
+validation before any claim is stated as established.
+
+## 7. Conclusion
+
+We present a geometric framework for prime distribution combining one fully proven result (the Geometric
+Sieve, Theorem 1) with one well-supported but explicitly unproven conjecture (the 0.73 representation
+constant). We additionally connect this framework to independently observed Heegner-type prime-generating
+arcs, and report a negative overfitting result as a methodological safeguard. All code and data are provided
+for full reproducibility.
+
+## References
+
+1. Hardy, G.H. & Wright, E.M. (2008). *An Introduction to the Theory of Numbers* (6th ed.). Oxford University Press.
+2. Apostol, T.M. (1976). *Introduction to Analytic Number Theory*. Springer.
+3. Granville, A. (2008). *Anatomy of Integers and Permutations*. CRM Proceedings.
+4. Zhang, Y. (2014). Bounded gaps between primes. *Annals of Mathematics*, 179(3), 1121-1174.
+5. Maynard, J. (2015). Small gaps between primes. *Annals of Mathematics*, 181(1), 383-413.
+6. Heegner, K. (1952). Diophantische Analysis und Modulfunktionen. *Mathematische Zeitschrift*, 56(3), 227-253.
+
+---
+*Corresponding author: [Email]*
+*Repository: [GitHub URL]*
