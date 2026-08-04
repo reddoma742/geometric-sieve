@@ -1,5 +1,4 @@
 
-markdown
 # The Geometric Sieve
 
 A structural framework for analyzing prime number distribution based on square layers.
