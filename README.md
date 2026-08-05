@@ -1,66 +1,142 @@
+markdown
+# Geometric Sieve
 
-# The Geometric Sieve
+A numerical study of prime distributions through the geometric framework
+**n = 2a ± b**, where *a* and *b* are primes or 1.
 
-A structural framework for analyzing prime number distribution based on square layers.
-
-## Author
-
-**Reddouane BERRAMDANE**
-- Email: reddoma@gmail.com
-- Date: August 2026
+---
 
 ## Overview
 
-This repository contains the complete implementation and data for the Geometric Sieve framework.
+This repository explores the representation of odd integers as:
+n = 2a + b or n = 2a - b
 
-### Key Results
-
-| Result | Status | Description |
-|:---|:---|:---|
-| **Theorem 1** | ✅ Proven | gcd(\|b\|, C(a)) > 1 ⇒ composite (zero false positives) |
-| **Conjecture 1** | ⚠️ Empirical | R(p) · (ln p)² / p → 0.73 (664,578 primes tested) |
-| **Golden K Arcs** | 📊 Observed | K ∈ {2, 3, 5, 11, 17, 41} produce longest prime chains |
-
-## Quick Start
-
-```bash
-pip install -r requirements.txt
-python code/verify_sieve.py
-python code/verify_Rp.py
-python code/geometric_sieve_full.py
-Repository Structure
 text
-geometric-sieve/
+
+where **a** is prime and **b** is either 1 or prime.
+
+The study documents observed differences in representation density, symmetry,
+and ratio between:
+
+- **Prime vs. composite** odd integers
+- **Primes of the form 4n+1 vs. 4n-1**
+
+across scales from 25,000 to 10,000,000.
+
+---
+
+## Key Observations
+
+| Observation | Description |
+|-------------|-------------|
+| **Isolation** | Primes have fewer representations than composites (~1.69 vs. ~2.79 mean `sum_norm`) |
+| **Symmetry** | Primes show near-perfect left-right symmetry within square bands |
+| **Topological charge** | 4n+1 and 4n-1 primes exhibit opposite attraction to square boundaries |
+| **Unified Score** | The gap between 4n+1 and 4n-1 converges to **U ≈ 0.04825** across all dimensions |
+| **Standing wave** | The gap oscillates with a period of ~4 band units |
+
+---
+
+## Repository Structure
 ├── README.md
-├── LICENSE
 ├── requirements.txt
+├── LICENSE
 ├── code/
-│   ├── verify_sieve.py
-│   ├── verify_Rp.py
-│   ├── geometric_sieve_full.py
-│   ├── generate_Rp_data.py
-│   └── scan_10M_results.py
+│ ├── verify_sieve.py
+│ ├── verify_Rp.py
+│ ├── singular_series.py
+│ ├── odd_vs_prime_scan.py
+│ ├── odd_vs_prime_band.py
+│ └── mod4_unified_analysis.py
 ├── data/
-│   ├── R_p_results_10M.csv
-│   ├── scan_10M_results.csv
-│   └── heegner_scan_top30.csv
-└── Rp_cpp/
-    └── main.cpp
-Citation
-text
-BERRAMDANE, Reddouane. The Geometric Sieve: A Structural Framework 
-for Prime Distribution. August 2026. GitHub: [repository-url]
-License
-MIT License - see LICENSE file
+│ ├── R_p_results_10M.csv
+│ └── scale_summary.csv
+└── figures/
+└── (generated plots)
 
 text
 
 ---
 
-## 📄 ملف 4: `paper_geometric_sieve.pdf`
+## Requirements
 
-هذا الملف موجود لديك من Claude. تأكد من تحديث:
+Install the required packages:
 
-- **Author**: Reddouane BERRAMDANE
-- **Email**: reddoma@gmail.com
-- **GitHub URL**: [(https://github.com/reddoma742/geometric-sieve.git)
+```bash
+pip install -r requirements.txt
+Usage
+1. Reproduce the main scan
+bash
+python code/odd_vs_prime_scan.py
+Computes R₋(n) and R₊(n) for all odd n up to N_MAX and saves
+odd_vs_prime_scan.csv.
+
+2. Band-based analysis
+bash
+python code/odd_vs_prime_band.py
+Analyzes primes within square bands [m², (m+1)²] and computes
+symmetry and ratio profiles.
+
+3. Unified mod-4 comparison
+bash
+python code/mod4_unified_analysis.py
+Computes the Unified Score U and dimension summaries across
+t_bin, dist_bin, and side_of_band.
+
+4. Singular series verification
+bash
+python code/singular_series.py
+Compares the empirical constant with the Hardy–Littlewood
+singular series and the twin prime constant C₂.
+
+Data
+R_p_results_10M.csv: R(p) values for 664,578 primes up to 10⁷
+
+scale_summary.csv: Multi-scale comparison (25K to 250K) of ratio profiles
+
+License
+MIT. See LICENSE for details.
+
+Citation
+If you use this work, please cite:
+
+text
+[To be updated after publication]
+text
+
+---
+
+## ✅ الخطوة 2: requirements.txt
+numpy>=1.21.0
+pandas>=1.3.0
+scipy>=1.7.0
+matplotlib>=3.4.0
+
+text
+
+---
+
+## ✅ الخطوة 3: LICENSE
+
+رخصة MIT القياسية:
+MIT License
+
+Copyright (c) 2025
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
