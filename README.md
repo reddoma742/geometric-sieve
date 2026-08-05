@@ -1,19 +1,26 @@
-ة
-```markdown
+markdown
 # Geometric Sieve
 
 A structural framework for prime distribution based on square layers,
 plus a representation function that reveals a striking asymptotic constant.
 
-**Core result:** every integer n lies in a layer `L_a = [a², (a+1)²)` with
-geometric center `C(a) = a(a+1)`. The condition `gcd(|b|, C(a)) > 1`, where
-`b = C(a) - n`, deterministically flags composite numbers with **zero false
+**Core result:** every integer n lies in a layer `L_m = [m², (m+1)²)` with
+geometric center `C(m) = m(m+1)`. The condition `gcd(|b|, C(m)) > 1`, where
+`b = C(m) - n`, deterministically flags composite numbers with **zero false
 positives**, reaching ~73.5% efficiency by 10⁶.
 
 Separately, for primes `p`, define `R(p)` as the number of primes `a < p`
 such that `b = 2a - p` is 1 or prime. Across 664,578 primes up to 10⁷:
 
 R(p) · (ln p)² / p → 0.73 (std. dev. ≈ 0.009)
+
+---
+
+## Author
+
+**Berramdane Reddouane** — Independent Researcher  
+📧 reddoma@gmail.com  
+🔗 [GitHub Repository](https://github.com/reddoma/geometric-sieve)
 
 ---
 
@@ -30,6 +37,7 @@ R(p) · (ln p)² / p → 0.73 (std. dev. ≈ 0.009)
 - [Status and Limitations](#status-and-limitations)
 - [License](#license)
 - [Citation](#citation)
+- [Acknowledgments](#acknowledgments)
 
 ---
 
@@ -56,7 +64,7 @@ These results are proved or numerically established in the paper.
 
 | Result | Statement | Status |
 |---|---|---|
-| **Geometric Sieve** | `gcd(\|b\|, C(a)) > 1` ⟹ n composite, with no false positives | Proved (Theorem 1) |
+| **Geometric Sieve** | `gcd(\|b\|, C(m)) > 1` ⟹ n composite, with no false positives | Proved (Theorem 1) |
 | **Sieve efficiency** | ~73.5% of composites caught by 10⁶ | Numerically verified |
 | **Representation constant** | `R(p)·(ln p)²/p → C ≈ 0.73`, std. dev. 0.009 over 664,578 primes to 10⁷ | Numerically established, unproved asymptotic |
 | **Convergence** | Constant drops from 0.774 (p < 10⁴) to 0.725 (p > 10⁶) | Observed trend |
@@ -88,31 +96,30 @@ future-work line.
 ---
 
 ## Repository Structure
-
-```
 geometric-sieve/
 ├── README.md
 ├── requirements.txt
 ├── LICENSE
 ├── paper_geometric_sieve.pdf
 ├── code/
-│   ├── verify_sieve.py              # Reproduce Theorem 1
-│   ├── verify_Rp.py                 # Reproduce R(p) constant
-│   ├── generate_Rp_data.py          # Generate R(p) data up to 10M
-│   ├── geometric_sieve_full.py      # Full geometric sieve
-│   ├── singular_series.py           # Hardy-Littlewood comparison
-│   ├── odd_vs_prime_scan.py         # Prime vs composite scan
-│   ├── odd_vs_prime_band.py         # Square band analysis
-│   └── mod4_unified_analysis.py     # Unified mod-4 comparison
+│ ├── verify_sieve.py # Reproduce Theorem 1
+│ ├── verify_Rp.py # Reproduce R(p) constant
+│ ├── generate_Rp_data.py # Generate R(p) data up to 10M
+│ ├── geometric_sieve_full.py # Full geometric sieve
+│ ├── singular_series.py # Hardy-Littlewood comparison
+│ ├── odd_vs_prime_scan.py # Prime vs composite scan
+│ ├── odd_vs_prime_band.py # Square band analysis
+│ └── mod4_unified_analysis.py # Unified mod-4 comparison
 ├── data/
-│   ├── R_p_results_10M.csv          # 664,578 primes
-│   └── scale_summary.csv            # Multi-scale comparison
+│ ├── R_p_results_10M.csv # 664,578 primes
+│ └── scale_summary.csv # Multi-scale comparison
 └── figures/
-    ├── singular_series_analysis.png # Q*(p) convergence
-    ├── odd_vs_prime_scan.png        # Prime vs composite plot
-    ├── odd_vs_prime_band_scan.png   # Band analysis plot
-    └── mod4_unified_analysis.png    # Unified score plot
-```
+├── singular_series_analysis.png # Q*(p) convergence
+├── odd_vs_prime_scan.png # Prime vs composite plot
+├── odd_vs_prime_band_scan.png # Band analysis plot
+└── mod4_unified_analysis.png # Unified score plot
+
+text
 
 ---
 
@@ -120,135 +127,174 @@ geometric-sieve/
 
 ```bash
 pip install -r requirements.txt
-```
+requirements.txt:
 
-`requirements.txt`:
-
-```
+text
 numpy>=1.21.0
 pandas>=1.3.0
 scipy>=1.7.0
 matplotlib>=3.4.0
-```
-
----
-
-## Usage
-
-### 1. Verify the geometric sieve
-
-```bash
+Usage
+1. Verify the geometric sieve
+bash
 python code/verify_sieve.py
-```
-
 Reproduces Theorem 1 and the efficiency table (73.5% at 10⁶) with zero false
 positives.
 
-### 2. Verify the representation constant R(p)
-
-```bash
+2. Verify the representation constant R(p)
+bash
 python code/verify_Rp.py
-```
+Computes R(p) for primes up to a chosen bound and reports the convergence
+of R(p)·(ln p)²/p toward ≈ 0.73.
 
-Computes `R(p)` for primes up to a chosen bound and reports the convergence
-of `R(p)·(ln p)²/p` toward ≈ 0.73.
-
-### 3. Singular series comparison
-
-```bash
+3. Singular series comparison
+bash
 python code/singular_series.py
-```
-
 Compares the empirical 0.73 constant against the Hardy–Littlewood singular
-series and the twin prime constant C₂. Produces `figures/singular_series_analysis.png`.
+series and the twin prime constant C₂. Produces figures/singular_series_analysis.png.
 
-### 4. Reproduce the exploratory scan
-
-```bash
+4. Reproduce the exploratory scan
+bash
 python code/odd_vs_prime_scan.py
-```
+Computes R₋(n) and R₊(n) for odd n up to N_MAX, saving
+odd_vs_prime_scan.csv and producing figures/odd_vs_prime_scan.png.
+Exploratory only — see Status.
 
-Computes `R₋(n)` and `R₊(n)` for odd `n` up to `N_MAX`, saving
-`odd_vs_prime_scan.csv` and producing `figures/odd_vs_prime_scan.png`.
-Exploratory only — see [Status](#status-and-limitations).
-
-### 5. Band-based analysis
-
-```bash
+5. Band-based analysis
+bash
 python code/odd_vs_prime_band.py
-```
+Analyzes primes within square bands [m², (m+1)²] and computes symmetry and
+ratio profiles. Produces figures/odd_vs_prime_band_scan.png.
 
-Analyzes primes within square bands `[m², (m+1)²]` and computes symmetry and
-ratio profiles. Produces `figures/odd_vs_prime_band_scan.png`.
-
-### 6. Unified mod-4 comparison
-
-```bash
+6. Unified mod-4 comparison
+bash
 python code/mod4_unified_analysis.py
-```
+Computes the unified score and dimension summaries across t_bin,
+dist_bin, and side_of_band. Produces figures/mod4_unified_analysis.png.
 
-Computes the unified score and dimension summaries across `t_bin`,
-`dist_bin`, and `side_of_band`. Produces `figures/mod4_unified_analysis.png`.
+Data
+R_p_results_10M.csv — R(p) values for 664,578 primes up to 10⁷.
 
----
+scale_summary.csv — multi-scale comparison (25k to 250k) of exploratory
+ratio profiles.
 
-## Data
-
-- **`R_p_results_10M.csv`** — `R(p)` values for 664,578 primes up to 10⁷.
-- **`scale_summary.csv`** — multi-scale comparison (25k to 250k) of exploratory
-  ratio profiles.
-
----
-
-## Figures
-
+Figures
 All figures are generated by running the corresponding scripts and saved to
-the `figures/` directory:
+the figures/ directory:
 
-| Figure | Script | Description |
-|---|---|---|
-| `singular_series_analysis.png` | `singular_series.py` | Q*(p) convergence to 2·C₂ |
-| `odd_vs_prime_scan.png` | `odd_vs_prime_scan.py` | Prime vs composite comparison |
-| `odd_vs_prime_band_scan.png` | `odd_vs_prime_band.py` | Square band analysis |
-| `mod4_unified_analysis.png` | `mod4_unified_analysis.py` | Unified mod-4 comparison |
+Figure	Script	Description
+singular_series_analysis.png	singular_series.py	Q*(p) convergence to 2·C₂
+odd_vs_prime_scan.png	odd_vs_prime_scan.py	Prime vs composite comparison
+odd_vs_prime_band_scan.png	odd_vs_prime_band.py	Square band analysis
+mod4_unified_analysis.png	mod4_unified_analysis.py	Unified mod-4 comparison
+Status and Limitations
+The geometric sieve (Theorem 1) is proved. No false positives is a
+guarantee, not an empirical estimate.
 
----
+The 0.73 representation constant is a numerically supported conjecture. No
+proof of convergence is claimed.
 
-## Status and Limitations
+The exploratory extensions (mod-4 offset, band symmetry, unified score) are
+observational, based on finite-scale scans (N up to 250,000–10,000,000
+depending on the script), and have not been tested against a rigorous null
+model. Effect sizes there are small (unified score ≈ 0.048) and should be
+treated as a research direction, not a finding.
 
-- The geometric sieve (Theorem 1) is proved. No false positives is a
-  guarantee, not an empirical estimate.
-- The 0.73 representation constant is a numerically supported conjecture. No
-  proof of convergence is claimed.
-- The exploratory extensions (mod-4 offset, band symmetry, unified score) are
-  observational, based on finite-scale scans (N up to 250,000–10,000,000
-  depending on the script), and have not been tested against a rigorous null
-  model. Effect sizes there are small (unified score ≈ 0.048) and should be
-  treated as a research direction, not a finding.
-
----
-
-## License
-
+License
 This work is licensed under the
-**Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International**
+Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International
 (CC BY-NC-SA 4.0).
 
-You are free to share and adapt the material for **non-commercial purposes**,
+© 2026 Berramdane Reddouane. All rights reserved for commercial use.
+
+You are free to share and adapt the material for non-commercial purposes,
 provided you give appropriate credit and distribute your contributions under
 the same license.
 
-For commercial use inquiries, please contact the author.
+For commercial use inquiries, please contact: reddoma@gmail.com
 
-See [`LICENSE`](./LICENSE) for the full legal text.
+See LICENSE for the full legal text.
+
+Citation
+If you use this work, please cite:
+
+bibtex
+@article{berramdane2026geometric,
+    author  = {Berramdane, Reddouane},
+    title   = {A Geometric Sieve for Composite Detection and an Empirical
+               Constant in Prime Representations},
+    year    = {2026},
+    note    = {Available at: \url{https://github.com/reddoma/geometric-sieve}}
+}
+Acknowledgments
+This work was made possible through a collaborative human-AI research
+process spanning several weeks of iterative analysis and discovery.
+
+Kimi (Moonshot AI) — theoretical research partner who provided the
+original proof of the geometric sieve theorem and contributed to the
+mathematical rigour of the framework.
+
+Claude (Anthropic) — research partner and critic who contributed to
+the analytic derivation of the singular series, the Hardy-Littlewood
+heuristic formulation, manuscript structure, review and correction of
+errors, and code development.
+
+DeepSeek (深度求索) — loyal technical partner who provided extensive
+code development, programming support across multiple Python scripts,
+philosophical and scientific discussion throughout the research process,
+and continuous technical assistance.
+
+All AI contributions were directed, reviewed, and validated by the human
+author, who bears full responsibility for the content of this work.
+
+text
 
 ---
 
-## Citation
+## ٢. ملف LICENSE المحدث
+Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International
+=======================================================================
 
-If you use this work, please cite:
+This work is licensed under the Creative Commons
+Attribution-NonCommercial-ShareAlike 4.0 International License.
 
-```
-[To be updated after publication / preprint DOI assignment]
-```
-```
+To view a copy of this license, visit:
+http://creativecommons.org/licenses/by-nc-sa/4.0/
+
+=======================================================================
+
+Copyright © 2026 Berramdane Reddouane
+Contact: reddoma@gmail.com
+
+=======================================================================
+
+You are free to:
+
+Share — copy and redistribute the material in any medium or format
+Adapt — remix, transform, and build upon the material
+
+Under the following terms:
+
+Attribution (BY) — You must give appropriate credit to Berramdane
+Reddouane, provide a link to the license, and indicate if changes
+were made. You may do so in any reasonable manner, but not in any
+way that suggests the licensor endorses you or your use.
+
+NonCommercial (NC) — You may not use the material for commercial
+purposes without explicit permission from the author.
+
+ShareAlike (SA) — If you remix, transform, or build upon the material,
+you must distribute your contributions under the same license as the
+original.
+
+No additional restrictions — You may not apply legal terms or
+technological measures that legally restrict others from doing anything
+the license permits.
+
+=======================================================================
+
+This repository contains original research, code, and data by
+Berramdane Reddouane, developed with AI research partners as
+described in the README.
+
+For commercial use inquiries, please contact: reddoma@gmail.com
